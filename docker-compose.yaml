@@ -5,7 +5,6 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
-    # We use the latest-edge tag for the service under development; all other services should use the "latest" tag
     image: printerlogic/pl-summit-2019:${DOCKER_TAG_APP:-latest-edge}
     volumes:
       - ./:/var/www/app:consistent
