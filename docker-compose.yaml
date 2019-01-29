@@ -12,12 +12,18 @@ services:
     env_file:
       - .env.local
     ports:
-      - "8443:443"
-      - "8080:80"
+      - "443:443"
+      - "80:80"
     depends_on:
       - mysql
     networks:
       - overlay
+    healthcheck:
+      test: curl -fk https://localhost
+      interval: 5s
+      timeout: 10s
+      retries: 30
+      start_period: 10s
 
   mysql:
     image: mysql:5.6
@@ -30,6 +36,11 @@ services:
     environment:
       MYSQL_DATABASE: "${DB_DATABASE:-pl_summit}"
       MYSQL_ROOT_PASSWORD: "${DB_PASSWORD:-password}"
+    healthcheck:
+      test: mysqladmin -u${DB_USERNAME:-root} -p${DB_PASSWORD:-password} ping
+      interval: 5s
+      timeout: 10s
+      retries: 10
 
 networks:
   overlay:
