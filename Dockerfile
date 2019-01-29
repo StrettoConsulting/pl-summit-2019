@@ -14,7 +14,6 @@ ENV NODE_PATH=/var/www/node_modules
 COPY --chown=www-data:www-data ./composer.json ./composer.lock ./package.json ./
 
 # composer
-RUN composer config github-oauth.github.com 0192464aa589b01f16911f4e8d1551f4274dd9c5
 RUN \
     n=0; until [ $n -ge 2 ]; do \
         composer install --no-scripts --no-autoloader --ansi --no-interaction -o && break; \
