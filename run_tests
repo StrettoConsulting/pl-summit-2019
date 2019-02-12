@@ -1,0 +1,8 @@
+#! env /bin/bash
+
+docker-compose run app \
+  phpunit \
+    --configuration=phpunit.xml  \
+    --bootstrap bootstrap/app.php \
+    --log-junit=output.xml \
+    tests/
