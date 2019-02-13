@@ -18,4 +18,14 @@ class ExampleTest extends TestCase
 
         $response->assertStatus(200);
     }
+
+    public function testDisplaysPrinterLogic()
+    {
+
+        $response = $this->get('/');
+
+        $response->assertSee("PrinterLogic");
+        $response->assertDontSee("Bugs!");
+    }
+
 }
