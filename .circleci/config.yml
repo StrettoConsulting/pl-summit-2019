@@ -1,49 +1,55 @@
-# PHP CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-php/ for more details
-#
 version: 2
 jobs:
   build:
     docker:
       - image: circleci/php:7.1-node-browsers
-      - image: circleci/mysql:5.7-ram
 
     steps:
       - checkout
-
-      - run: sudo apt update # PHP CircleCI 2.0 Configuration File# PHP CircleCI 2.0 Configuration File sudo apt install zlib1g-dev libsqlite3-dev
+      - run: sudo apt update
       - run: sudo docker-php-ext-install zip
 
-      # Download and cache dependencies
+      # Download and cache composer dependencies
       - restore_cache:
+          name: Restore compose cache
           keys:
             # "composer.lock" can be used if it is committed to the repo
             - v1-dependencies-{{ checksum "composer.json" }}
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
-
-      - run: composer install -n --prefer-dist
-
+      - run:
+          name: composer install
+          command: composer install -n --prefer-dist
       - save_cache:
+          name: Save compose cache
           key: v1-dependencies-{{ checksum "composer.json" }}
           paths:
             - ./vendor
+
+      # Download and cache Node dependencies
       - restore_cache:
+          name: Restore Node Cache
           keys:
             - node-v1-{{ checksum "package.json" }}
             - node-v1-
-      - run: yarn install
+      - run:
+          name: yarn install
+          command: yarn install
       - save_cache:
+          name: Save Node Cache
           key: node-v1-{{ checksum "package.json" }}
           paths:
             - node_modules
 
-      # prepare the database
-      - run: touch storage/testing.sqlite
-      - run: php artisan migrate --env=testing --database=sqlite_testing --force
+      # prepare the environment
+      - run:
+          name: "Prepare Environment"
+          command: cp .env.local .env
 
-      # run tests with phpunit or codecept
-      #- run: ./vendor/bin/phpunit
-      - run: ./vendor/bin/codecept build
-      - run: ./vendor/bin/codecept run
+      # run tests:
+      - run:
+          name: "Run PHPUnit"
+          command: mkdir -p test-results/phpunit && ./vendor/bin/phpunit --configuration=phpunit.xml --bootstrap bootstrap/app.php --log-junit=test-results/phpunit/output.xml
+      - store_test_results:
+          name: Submit test results to Circle
+          path: test-results
