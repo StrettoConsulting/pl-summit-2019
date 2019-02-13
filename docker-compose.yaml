@@ -19,7 +19,7 @@ services:
       - overlay
     healthcheck:
       test: curl -fk https://localhost
-      interval: 5s
+      interval: 60s
       timeout: 10s
       retries: 30
       start_period: 10s
