@@ -36,8 +36,8 @@
 
             .top-right {
                 position: absolute;
-                right: 10px;
-                top: 18px;
+                right: 150px;
+                top: 480px;
             }
 
             .content {
@@ -46,6 +46,10 @@
 
             .title {
                 font-size: 84px;
+            }
+
+            .smalltitle {
+                font-size: 42px;
             }
 
             .links > a {
@@ -82,6 +86,10 @@
             <div class="content">
                 <div class="title m-b-md">
                     PrinterLogic Develop Summit 2019
+                </div>
+                <div class="top-right">
+                    <?php $bitcoin = App::make(Bitcoin::class) ?>
+                    BTC: $<?php echo $bitcoin->getRate() ?> (not $19,000)
                 </div>
 
                 <div class="links">
